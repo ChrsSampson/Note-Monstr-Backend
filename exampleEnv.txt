@@ -1,0 +1,8 @@
+Create a .env file in the root of the project and add the following:
+PORT=[number]
+SOCKET=[number]
+NODE_ENV=[development || production || test]
+DB_HOST=[host]
+DB_USER=[username]
+DB_PASS=[password]
+DB_NAME=[database name]
