@@ -18,9 +18,11 @@ async function createUserTable() {
     try {
         await sql`CREATE TABLE IF NOT EXISTS users(
             id SERIAL PRIMARY KEY,
-            username VARCHAR(255) UNIQUE NOT NULL,
+            username VARCHAR(50) UNIQUE NOT NULL,
             password VARCHAR(255) NOT NULL,
-            email VARCHAR(255) UNIQUE NOT NULL,
+            session_id VARCHAR(255) UNIQUE,
+            reset_code VARCHAR(20) UNIQUE,
+            email VARCHAR(60) UNIQUE NOT NULL,
             created_at TIMESTAMP NOT NULL DEFAULT NOW()
         )`;
 
@@ -36,7 +38,7 @@ async function createStateTable() {
         await sql`CREATE TABLE IF NOT EXISTS state (
             id SERIAL PRIMARY KEY,
             state json,
-            user_id SERIAL REFERENCES users(id) ON DELETE CASCADE,
+            user_id SERIAL REFERENCES users(id) ON DELETE CASCADE
         )`;
     } catch (err) {
         console.log("createStateTable Failed or already exists", err);

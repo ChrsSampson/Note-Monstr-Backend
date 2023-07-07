@@ -8,6 +8,8 @@ import { useIO } from "./routes/sockets";
 
 const app = express();
 
+app.use(express.json());
+
 const socketServer = createServer(app);
 const io = new Server(socketServer, {
     cors: {
