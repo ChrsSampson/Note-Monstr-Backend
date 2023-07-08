@@ -1,6 +1,5 @@
 import sql from "./connection";
-import { config } from "dotenv";
-import bcrtupt from "bcrypt";
+import bcrypt from "bcrypt";
 
 interface UserData {
     email: string;
@@ -9,8 +8,8 @@ interface UserData {
 }
 
 function hashString(str: string) {
-    const salt = bcrtupt.genSaltSync(10);
-    return bcrtupt.hashSync(str, salt);
+    const salt = bcrypt.genSaltSync(10);
+    return bcrypt.hashSync(str, salt);
 }
 
 const User = {
@@ -77,13 +76,16 @@ const User = {
     },
     comparePassword: async (password: string, hash: string) => {
         try {
-            const r = await bcrtupt.compare(password, hash);
+            const r = await bcrypt.compare(password, hash);
 
             return r;
         } catch (err) {
             console.log(err);
             throw new Error("Error comparing password");
         }
+    },
+    createSession: async (id: number) => {
+        return null;
     },
 };
 
