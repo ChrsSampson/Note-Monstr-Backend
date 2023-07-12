@@ -33,6 +33,21 @@ async function createUserTable() {
     }
 }
 
+async function createBoardTable() {
+    try {
+        await sql`CREATE TABLE IF NOT EXISTS board (
+            id SERIAL PRIMARY KEY,
+            board json,
+            user_id SERIAL REFERENCES users(id) ON DELETE CASCADE
+        )`;
+
+        return true;
+    } catch (err) {
+        console.log("createBoardTable Failed or already exists", err);
+        return false;
+    }
+}
+
 async function createStateTable() {
     try {
         await sql`CREATE TABLE IF NOT EXISTS state (
@@ -48,13 +63,24 @@ async function createStateTable() {
 
 async function runSchema() {
     try {
+        const results = [];
         // await createDatabase();
-        await createUserTable();
-        await createStateTable();
+        results.push(await createUserTable());
+        results.push(await createStateTable());
+        results.push(await createBoardTable());
+
+        if (results.includes(false)) throw new Error("Error running schema");
+
+        return "success";
     } catch (err) {
         console.log(err);
         throw new Error("Error running schema");
     }
 }
 
-export { runSchema };
+const r = runSchema().then((res) => {
+    if (res === "success") process.exit(0);
+    else process.exit(1);
+});
+
+// export { runSchema };
