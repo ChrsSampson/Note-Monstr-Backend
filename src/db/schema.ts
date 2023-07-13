@@ -1,5 +1,5 @@
-import sql from "./connection";
-import { config } from "dotenv";
+import sql from './connection';
+import { config } from 'dotenv';
 
 config();
 
@@ -28,7 +28,7 @@ async function createUserTable() {
 
         return true;
     } catch (err) {
-        console.log("createUserTable Failed or already exists", err);
+        console.log('createUserTable Failed or already exists', err);
         return false;
     }
 }
@@ -43,7 +43,7 @@ async function createBoardTable() {
 
         return true;
     } catch (err) {
-        console.log("createBoardTable Failed or already exists", err);
+        console.log('createBoardTable Failed or already exists', err);
         return false;
     }
 }
@@ -56,7 +56,7 @@ async function createStateTable() {
             user_id SERIAL REFERENCES users(id) ON DELETE CASCADE
         )`;
     } catch (err) {
-        console.log("createStateTable Failed or already exists", err);
+        console.log('createStateTable Failed or already exists', err);
         return false;
     }
 }
@@ -69,18 +69,20 @@ async function runSchema() {
         results.push(await createStateTable());
         results.push(await createBoardTable());
 
-        if (results.includes(false)) throw new Error("Error running schema");
+        if (results.includes(false)) throw new Error('Error running schema');
 
-        return "success";
+        return 'success';
     } catch (err) {
         console.log(err);
-        throw new Error("Error running schema");
+        throw new Error('Error running schema');
     }
 }
 
 const r = runSchema().then((res) => {
-    if (res === "success") process.exit(0);
-    else process.exit(1);
+    if (res === 'success') {
+        console.log('Schema ran successfully');
+        process.exit(0);
+    } else process.exit(1);
 });
 
 // export { runSchema };

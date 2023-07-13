@@ -1,41 +1,41 @@
 // attach events to the socket server
-import User from "../db/User";
+import User from '../db/User';
+import verifyClient from '../middleware/verifyClient';
 
 function useIO(ws) {
-    ws.on("connection", (socket) => {
-        console.log("client up", socket.id);
+    ws.use(verifyClient);
+
+    ws.on('connection', (socket) => {
+        console.log('client up', socket.id);
 
         // test event
-        socket.on("echo", (message) => {
-            socket.emit("echo", message);
+        socket.on('echo', (message) => {
+            socket.emit('echo', message);
         });
 
-        socket.on("sign-up", async (data, callback) => {
+        // takes a callback from the client
+        socket.on('sign-up', async (data, callback) => {
             try {
                 const user = await User.create(data);
                 if (user) {
                     callback(user);
                 }
             } catch (err) {
-                callback({ error: err.message });
+                callback({ error: err });
             }
         });
 
-        socket.on("user-login", (data) => {
-            console.log("login Event", data);
+        socket.on('user-login', (data) => {
+            console.log('login Event', data);
         });
 
-        socket.on("error", (err) => {
-            console.log(err);
+        socket.on('error', (err) => {
+            console.log('Random Error: ', err.message);
         });
     });
 
-    ws.on("disconnect", () => {
-        console.log("a user disconnected");
-    });
-
-    ws.on("connect_error", (err) => {
-        console.log(`connect_error due to ${err.message}`);
+    ws.on('disconnect', () => {
+        console.log('a user disconnected');
     });
 }
 
